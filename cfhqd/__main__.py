@@ -9,6 +9,7 @@ from cfhqd.commands import start, help, add, add_keys, clear, list, ratings, rem
 from cfhqd.config import settings
 from cfhqd.requests import check_changes, APIException
 from cfhqd.utils import aggregate_changes
+from cfhqd.db import init_tables
 
 
 def main():
@@ -50,6 +51,7 @@ def main():
             await asyncio.sleep(settings.CHECK_INTERVAL)
 
     async def on_startup(dispatcher):
+        await init_tables()
         asyncio.create_task(watch_changes(dispatcher))
 
     start_polling(dispatcher, on_startup=on_startup)

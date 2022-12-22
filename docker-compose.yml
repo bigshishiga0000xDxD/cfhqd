@@ -1,0 +1,29 @@
+version: '3.3'
+
+services:
+  bot:
+    container_name: bot
+    build: .
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+
+  db:
+    container_name: database
+    image: postgres:latest
+    restart: always
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${POSTGRES_USER}" ]
+      timeout: 5s
+      interval: 1s
+      retries: 10
+  
+volumes:
+  postgres_data:
