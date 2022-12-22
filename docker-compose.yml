@@ -1,24 +1,26 @@
 version: '3.3'
 
 services:
-  bot:
-    container_name: bot
+  cfhqd-bot:
+    container_name: cfhqd-bot
     build: .
     restart: always
-    depends_on:
-      db:
-        condition: service_healthy
     env_file:
       - .env
 
-  db:
-    container_name: database
+  cfhqd-database:
+    container_name: cfhqd-database
     image: postgres:latest
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - .env
+    ports:
+      - "5439:5439"
+    expose:
+      - "5439"
+    command: -p 5439
     healthcheck:
       test: [ "CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${POSTGRES_USER}" ]
       timeout: 5s
@@ -27,3 +29,8 @@ services:
   
 volumes:
   postgres_data:
+
+networks:
+  default:
+    name: bridge-nerwork 
+    external: true
