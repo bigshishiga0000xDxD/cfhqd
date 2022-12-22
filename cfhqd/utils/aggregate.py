@@ -39,6 +39,9 @@ async def aggregate_changes(contest) -> list[MessageModel]:
                     changes[user.handle_cf][1] - changes[user.handle_cf][0]
                 ))
 
+        if not chat_changes:
+            continue
+
         chat_changes.sort(key=lambda change: change.delta, reverse=True)
         longest_handle = max(map(lambda change: len(change.handle), chat_changes))
 

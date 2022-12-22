@@ -5,7 +5,7 @@ from aiohttp import ClientError
 import logging
 import asyncio
 
-from cfhqd.commands import start, help, add, add_keys, clear, list, ratings, remove, sync
+from cfhqd.commands import start, help, add, add_keys, clear, list, ratings, remove, sync, rules
 from cfhqd.config import settings
 from cfhqd.requests import check_changes, APIException
 from cfhqd.utils import aggregate_changes
@@ -27,6 +27,7 @@ def main():
     dispatcher.register_message_handler(callback=ratings, commands=['ratings'])
     dispatcher.register_message_handler(callback=remove, commands=['remove'])
     dispatcher.register_message_handler(callback=sync, commands=['sync'])
+    dispatcher.register_message_handler(callback=rules, commands=['rules'])
 
     async def watch_changes(dispatcher):
         while True:

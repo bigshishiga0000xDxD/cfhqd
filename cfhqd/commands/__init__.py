@@ -7,3 +7,4 @@ from .list import list
 from .ratings import ratings
 from .remove import remove
 from .sync import sync
+from .rules import rules
