@@ -7,9 +7,9 @@ import asyncio
 
 from cfhqd.commands import start, help, add, add_keys, clear, list, ratings, remove, sync, rules
 from cfhqd.config import settings
-from cfhqd.requests import check_changes, APIException
+from cfhqd.requests import check_changes, APIException, http_session
 from cfhqd.utils import aggregate_changes
-from cfhqd.db import init_tables
+from cfhqd.db import init_tables, session
 
 
 def main():
@@ -55,7 +55,16 @@ def main():
         await init_tables()
         asyncio.create_task(watch_changes(dispatcher))
 
-    start_polling(dispatcher, on_startup=on_startup)
+    async def on_shutdown(dispatcher):
+        await dispatcher.bot.send_message(
+            765786358,
+            'shutting down!!'
+        )
+
+        await http_session.close()
+        await session.close()
+
+    start_polling(dispatcher, on_startup=on_startup, on_shutdown=on_shutdown)
 
 if __name__ == '__main__':
     main()
